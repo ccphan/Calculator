@@ -15,16 +15,26 @@ class ViewController: UIViewController {
     
     // var userInTheMiddleOfTypingANumber: Bool = false
     var userInTheMiddleOfTypingANumber = false
+    var decimalTyped = false
    
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         
-        if userInTheMiddleOfTypingANumber {
-            display.text = display.text! + digit
-        } else {
-            userInTheMiddleOfTypingANumber = true
-            display.text = digit
+        // only allow legal decimal numbers
+        if (digit != ".") || (!decimalTyped && digit == ".")  {
+            if userInTheMiddleOfTypingANumber {
+                display.text = display.text! + digit
+            } else {
+                userInTheMiddleOfTypingANumber = true
+                display.text = digit
+            }
         }
+        
+        if digit == "." {
+            decimalTyped = true
+            
+        }
+
         
     }
 
@@ -63,6 +73,7 @@ class ViewController: UIViewController {
     
     @IBAction func enter() {
         userInTheMiddleOfTypingANumber = false
+        decimalTyped = false
         operandStack.append(displayValue)
         println("operandStack = \(operandStack)")
     }
