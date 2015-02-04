@@ -44,10 +44,10 @@ class CalculatorBrain
             switch op {
             case .Operand(let operand):
                 return (operand, remainingOps)
-            case .UniaryOperation( _ , let operation):
+            case .UniaryOperation( _ , let operation):  // the _ means you don't really care about this argument
                 let operandEvaluation = evaluate(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return (operand, operandEvaluation.remainingOps)
+                    return (operation(operand), operandEvaluation.remainingOps)
                 }
             case .BinaryOperation(_, let operation):
                 let op1Evaluation = evaluate(remainingOps)
@@ -71,14 +71,16 @@ class CalculatorBrain
     }
     
     
-    func pushOperand(operation: Double) {
-        optStack.append(Op.Operand(operation))
+    func pushOperand(operand: Double) -> Double? {
+        optStack.append(Op.Operand(operand))
+        return evaluate()
     }
     
-    func performOperation(symbol: String) {
+    func performOperation(symbol: String) -> Double? {
         if let operation = knownOps[symbol] {
             optStack.append(operation)
         }
         
+        return evaluate()
     }
 }
