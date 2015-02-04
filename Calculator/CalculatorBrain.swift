@@ -10,10 +10,24 @@ import Foundation
 
 class CalculatorBrain
 {
-    private enum Op {
+    private enum Op: Printable {  // implement Printable protocol which is just the computed property description
     case Operand(Double)  // associate a double with enumerated case
     case UniaryOperation(String, Double -> Double)  // associate function with this case
     case BinaryOperation(String, (Double, Double) -> Double)
+   
+    // convert enum members into strings - for debugging
+    var description: String {
+        get {
+            switch self {
+            case .Operand(let operand):
+                return "\(operand)"
+            case .UniaryOperation(let symbol, _):
+                return symbol
+            case .BinaryOperation(let symbol, _):
+                return symbol
+            }
+        }
+    }
     }
     
     private var optStack = [Op]()
@@ -67,6 +81,8 @@ class CalculatorBrain
     
     func evaluate() -> Double? {
         let (result, remainder) = evaluate(optStack)
+        // debug
+        println("\(optStack) = \(result) with \(remainder) left over")
         return result
     }
     

@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var history: UILabel!
     
     let brain = CalculatorBrain()
     
@@ -21,6 +22,10 @@ class ViewController: UIViewController {
    
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
+
+        // update the entered history
+        // probably should get this from the model BrainCalculator.optStack instead of building it here
+        history.text = history.text! + digit
         
         // only allow legal decimal numbers
         if (digit != ".") || (!decimalTyped && digit == ".")  {
@@ -41,6 +46,10 @@ class ViewController: UIViewController {
     }
 
     @IBAction func operate(sender: UIButton) {
+
+        // update the entered history
+        history.text = history.text! + sender.currentTitle!
+
         if userInTheMiddleOfTypingANumber {
             enter()
         }
@@ -55,6 +64,7 @@ class ViewController: UIViewController {
         }
     }
     
+
     
     // computed value to get double of displayed value
     var displayValue: Double {
@@ -71,11 +81,16 @@ class ViewController: UIViewController {
     @IBAction func enter() {
         userInTheMiddleOfTypingANumber = false
         decimalTyped = false
+        
+        // update the entered history
+        history.text = history.text! + "="
+        
         if let result = brain.pushOperand(displayValue) {
             displayValue = result
         } else {
             displayValue = 0  // want really to make displayValue optional and display nil
         }
+        
     }
 }
 
